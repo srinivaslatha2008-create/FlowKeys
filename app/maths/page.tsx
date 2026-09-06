@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import './maths.css'
 
 type Problem = { question: string; answer: string; topic: string }
 type Level = { title: string; subtitle: string; problems: Problem[] }
@@ -93,21 +94,10 @@ export default function MathsPage() {
   const problem = filtered[index % filtered.length]
 
   function changeLevel(next: number) {
-    setLevel(next)
-    setIndex(0)
-    setTopic('All')
-    setShowAnswer(false)
+    setLevel(next); setIndex(0); setTopic('All'); setShowAnswer(false)
   }
-
-  function nextProblem() {
-    setIndex(i => i + 1)
-    setShowAnswer(false)
-  }
-
-  function markSolved() {
-    setSolved(s => s + 1)
-    nextProblem()
-  }
+  function nextProblem() { setIndex(i => i + 1); setShowAnswer(false) }
+  function markSolved() { setSolved(s => s + 1); nextProblem() }
 
   return (
     <main className="mathsPage">
@@ -119,34 +109,18 @@ export default function MathsPage() {
         </div>
         <div className="mathsScore"><strong>{solved}</strong><span>solved this session</span></div>
       </section>
-
       <section className="levelGrid">
-        {levels.map((item, i) => (
-          <button key={item.title} className={`levelCard ${i === level ? 'active' : ''}`} onClick={() => changeLevel(i)}>
-            <strong>{item.title}</strong>
-            <span>{item.problems.length} problems</span>
-            <small>{item.subtitle}</small>
-          </button>
-        ))}
+        {levels.map((item, i) => <button key={item.title} className={`levelCard ${i === level ? 'active' : ''}`} onClick={() => changeLevel(i)}><strong>{item.title}</strong><span>{item.problems.length} problems</span><small>{item.subtitle}</small></button>)}
       </section>
-
       <section className="mathsWorkspace">
-        <div className="topicRail">
-          <h3>{currentLevel.title}</h3>
-          {topics.map(t => <button key={t} className={topic === t ? 'selected' : ''} onClick={() => { setTopic(t); setIndex(0); setShowAnswer(false) }}>{t}</button>)}
-        </div>
-
+        <div className="topicRail"><h3>{currentLevel.title}</h3>{topics.map(t => <button key={t} className={topic === t ? 'selected' : ''} onClick={() => { setTopic(t); setIndex(0); setShowAnswer(false) }}>{t}</button>)}</div>
         <article className="problemCard">
           <div className="problemMeta"><span>{currentLevel.title}</span><span>{problem.topic}</span></div>
           <p className="problemNumber">Problem {((index % filtered.length) + 1)} of {filtered.length}</p>
           <h2>{problem.question}</h2>
           <p className="hint">💡 Try it on paper first. FlowKeys should help you learn the method, not just reveal the answer.</p>
           {showAnswer && <div className="answerBox"><strong>Answer</strong><p>{problem.answer}</p></div>}
-          <div className="problemActions">
-            <button className="primary" onClick={() => setShowAnswer(v => !v)}>{showAnswer ? 'Hide answer' : 'Reveal answer'}</button>
-            <button className="secondary" onClick={markSolved}>I solved it ✓</button>
-            <button className="secondary" onClick={nextProblem}>Next problem →</button>
-          </div>
+          <div className="problemActions"><button className="primary" onClick={() => setShowAnswer(v => !v)}>{showAnswer ? 'Hide answer' : 'Reveal answer'}</button><button className="secondary" onClick={markSolved}>I solved it ✓</button><button className="secondary" onClick={nextProblem}>Next problem →</button></div>
         </article>
       </section>
     </main>
